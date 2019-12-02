@@ -1,7 +1,18 @@
-//Name(s):
-//ID
-//Section
+//Name(s): Pitchapa Lapnimitanan, Teerasit Wongpa
+//ID 6088074, 6088224
+//Section 3
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This class implements PageRank algorithm on simple graph structure.
@@ -18,7 +29,30 @@ public class PageRanker {
 	 * Where pid_1, pid_2, ..., pid_n are the page IDs of the page having links to page pid_1. 
 	 * You can assume that a page ID is an integer.
 	 */
-	public void loadData(String inputLinkFilename){}
+	private static Map<Integer, Set<Integer>> temp = new HashMap<Integer, Set<Integer>>();
+    Map<Integer, Set<Integer>> pageOutLinks = new HashMap<Integer, Set<Integer>>();
+	
+	public void loadData(String inputLinkFilename){
+		try(BufferedReader r = Files.newBufferedReader(Paths.get(inputLinkFilename))) {
+			String s;
+			
+			while((s = r.readLine()) != null) {
+				String[] data = s.split(" ");
+				int P = Integer.parseInt(data[0]);
+
+				Set<Integer> M = new HashSet<Integer>();
+				for(int i=1;i<data.length;i++) {
+					M.add(Integer.parseInt(data[i]));
+				}
+				temp.put(P, M);
+				System.out.println(M);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * This method will be called after the graph is loaded into the memory.
@@ -79,7 +113,8 @@ public class PageRanker {
 	{
 	long startTime = System.currentTimeMillis();
 		PageRanker pageRanker =  new PageRanker();
-		pageRanker.loadData("citeseer.dat");
+		pageRanker.loadData("test.dat");
+//		System.out.println(temp);
 		pageRanker.initialize();
 		pageRanker.runPageRank("perplexity.out", "pr_scores.out");
 		Integer[] rankedPages = pageRanker.getRankedPages(100);
